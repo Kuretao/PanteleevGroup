@@ -1,0 +1,59 @@
+.buttonDefault{
+    background-color: var(--BlueDefault);
+    border: none;
+    width: 100%;
+    height: 40px;
+    border-radius: 99px;
+    line-height: 100%;
+    font-size: 14px;
+    color: #fcfcfc;
+    cursor: pointer;
+}
+
+
+.buttonWhite{
+    background-color: transparent;
+    border: 2px solid var(--BorderGray);
+    width: 100%;
+    line-height: 100%;
+    height: 40px;
+    border-radius: 99px;
+
+    font-size: 14px;
+    color: #23262F;
+    cursor: pointer;
+}
+
+
+.buttonDefault.smallBtn,.buttonWhite.smallBtn{
+    width: max-content;
+    padding: 12px 16px;
+    font-weight: 700;
+}
+
+
+.buttonDefault.table-btn, .buttonWhite.table-btn{
+    width: 200px;
+}
+
+.table-btns{
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin: 56px;
+}
+
+.show-password-btn{
+    border: none;
+    background-color: transparent;
+    margin-right: 24px;
+}
+
+.admin-btn{
+    position: absolute;
+    top: 36px;
+    right: 36px;
+    width: max-content;
+    padding: 12px 24px;
+    color: var(--ColorSubTitle);
+}

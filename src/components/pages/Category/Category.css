@@ -1,0 +1,13 @@
+.Category {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    width: 100%;
+}
+
+.FullLogo{
+    margin-top: 33px;
+    margin-left: auto;
+    display: block;
+}

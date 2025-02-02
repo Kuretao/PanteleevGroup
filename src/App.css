@@ -1,0 +1,37 @@
+*{
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+  transition: all .2s ease;
+}
+
+.App{
+  min-height: 100vh;
+}
+
+:root{
+  --BlueDefault: #0D3EB4;
+  --BlueSubTitle: #0636A9;
+  --Gray: #666666;
+  --LabelGray: #6F7074;
+  --ColorH1: #23262F;
+  --ColorSubTitle: #777E90;
+  --BorderGray: #E6E8EC;
+}
+
+h1{
+  font-size: 48px;
+  line-height: 100%;
+  color: var(--ColorH1);
+}
+
+.Page-404{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 70px;
+  gap: 70px;
+}

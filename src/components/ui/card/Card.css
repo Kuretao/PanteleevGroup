@@ -1,0 +1,34 @@
+.card {
+    width: calc(25% - 20px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 33px 36px;
+    gap: 30px;
+    border-radius: 16px;
+    border: 1px solid var(--BorderGray);
+    height: 421px;
+    text-align: center;
+}
+
+.card img{
+    border-radius: 100%;
+    height: 160px;
+    width: 160px;
+    object-position: center;
+    background-color: #ECECEC;
+}
+
+.card-title{
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--ColorH1);
+    line-height: 100%;
+}
+
+.card hr{
+    width: 100%;
+    border: none;
+    background-color: var(--BorderGray);
+    height: 1px;
+}

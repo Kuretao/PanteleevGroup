@@ -1,0 +1,39 @@
+.container{
+    padding: 0 148px;
+}
+
+.Main__Head{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+    padding-bottom: 31px;
+    border-bottom: 1px solid #DAD3D3;
+    align-items: end;
+}
+
+.MainPage__main{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: max-content;
+    margin-top: 62px;
+    gap: 62px;
+    align-items: center;
+    text-align: center;
+}
+
+.main-title__container{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.main-title__container h1{
+    color: var(--ColorH1);
+}
+
+.main__subtitle{
+    color: var(--ColorSubTitle);
+    font-size: 14px;
+}
