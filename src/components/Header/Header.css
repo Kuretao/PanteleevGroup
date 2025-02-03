@@ -5,7 +5,7 @@
     flex-direction: row;
     align-items: center;
     padding: 27px 30px;
-    gap: 35px;
+    justify-content: space-between;
     border-bottom: 1px solid #DAD3D3;
 }
 
@@ -14,5 +14,14 @@
     font-weight: 500;
     font-size: 24px;
     text-transform: uppercase;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }
 
+.header-btns{
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+}

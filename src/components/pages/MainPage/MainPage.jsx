@@ -10,7 +10,7 @@ const MainHead = () =>{
             <InputData label="контактное лицо" placeholder="введите имя и фамилию"/>
             <InputData label="Почта" placeholder="введите почту"/>
             <InputData label="Телефон для связи" placeholder="введите телефон"/>
-            <NavLink to="/Category"><ButtonDefault propsClass="smallBtn" buttonDefaultText="Создать новый заказ"/></NavLink>
+            <NavLink to="/Category" style={{height: 46}}><ButtonDefault propsClass="smallBtn hg" buttonDefaultText="Создать новый заказ"/></NavLink>
         </div>
     )
 }
