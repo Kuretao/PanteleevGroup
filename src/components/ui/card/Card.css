@@ -11,6 +11,11 @@
     text-align: center;
 }
 
+.card:hover{
+    box-shadow: 0 10px 30px #00000020;
+    scale: 1.03;
+}
+
 .card img{
     border-radius: 100%;
     height: 160px;

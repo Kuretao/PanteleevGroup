@@ -18,7 +18,10 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
+}
 
+.modal .input-field{
+    border-radius: 12px!important;
 }
 
 .modal h1{

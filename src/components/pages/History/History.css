@@ -1,6 +1,7 @@
 .history-item{
     display: flex;
     flex-direction: row;
+    align-items: center;
     width: 100%;
     height: max-content;
     justify-content: space-between;
@@ -40,7 +41,7 @@
     gap: 80px;
 }
 
-.history__rightside-top{
+.history__rightside-left{
     color: var(--ColorSubTitle);
     display: flex;
     flex-direction: column;
@@ -48,13 +49,39 @@
     font-size: 20px;
 }
 
-.history__rightside-bottom{
+.history__rightside-left h2{
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.history__rightside-right{
     display: flex;
     flex-direction: column;
     gap: 5px;
     color: var(--ColorH1);
+}
+
+.history__rightside-right h2{
     font-size: 20px;
     font-weight: 400;
+}
+
+.history__note{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.history__note h1{
+    font-size: 20px;
+    line-height: 135%;
+    color: var(--ColorSubTitle);
+}
+
+.history__note h2{
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ColorH1);
 }
 
 .container.history{

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./ThicknessTable.css";
 
-export const ThicknessTable = ({ options, value, onChange, disabled }) => {
+export const ThicknessTable = ({ options, value, onChange, disabled, title }) => {
     const [isTableOpen, setIsTableOpen] = useState(false);
 
     useEffect(() => {
@@ -23,11 +23,11 @@ export const ThicknessTable = ({ options, value, onChange, disabled }) => {
                 onClick={() => !disabled && setIsTableOpen(!isTableOpen)}
                 disabled={disabled}
             >
-                {value || "Выбрать толщину"} <img onClick={() => !disabled && setIsTableOpen(!isTableOpen)} src="/images/icons/setting.svg" alt=""/>
+                {value || "Выбрать толщину"} <img className="setting-rotate" onClick={() => !disabled && setIsTableOpen(!isTableOpen)} src="/images/icons/setting.svg" alt=""/>
             </button>
             {isTableOpen && (
                 <div className="thickness-table">
-                    <h2>Таблица</h2>
+                    <h2>{title}</h2>
                     <div className="table-grid">
 
                         {options.map((option) => (

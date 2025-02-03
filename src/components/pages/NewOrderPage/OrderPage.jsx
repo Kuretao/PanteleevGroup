@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./OrderPage.css";
-import {InputDefault, InputGroup} from "../../ui/input/Input";
+import { InputGroup} from "../../ui/input/Input";
 import {Dropdown} from "../../ui/dropdown/Dropdown";
 import {ThicknessTable} from "../../ui/ThicknessTable/ThicknessTable";
 import {ButtonDefault} from "../../ui/button/Button";
 import {NavLink} from "react-router-dom";
+import {OrderHeader} from "../../ui/OrderPage/OrderHeader";
 
 
 const VariantBlock = ({ title, children , disabled}) => {
@@ -23,7 +24,7 @@ const VariantBlock = ({ title, children , disabled}) => {
 export const NewOrderPage = () => {
     const [selectedOption, setSelectedOption] = useState("image1");
     const [radioOptionsImage, setRadioOptionsImage] = useState([
-        { value: "polyethylene", label: "ПЭ (полиэтилен)", checked: true },
+        { value: "polyethylene", label: "ПЭ (полиэтилен)", checked: false },
         { value: "oc", label: "ОЦ (оцинковка)", checked: false },
     ]);
     const [selectedThickness, setSelectedThickness] = useState(null);
@@ -50,34 +51,21 @@ export const NewOrderPage = () => {
     });
     useEffect(() => {
         setStepCompleted({
-            CheckBoxGroup: selectedOption !== null,
-            dropdown: dropdownValue !== null,
-            thickness: dropdownValue !== null && selectedThickness !== null,
+            CheckBoxGroup: radioOptionsImage.some(option => option.checked),
+            dropdown: dropdownValue !== null && dropdownValue !== "param1",
+            thickness: dropdownValue !== null && dropdownValue !== "param1" &&  selectedThickness !== null,
             inputGroup:
                 dropdownValue !== null &&
+                dropdownValue !== "param1" &&
                 selectedThickness !== null &&
+                radioOptionsImage.some(option => option.checked) &&
                 selectedOption !== null,
-
         });
-    }, [dropdownValue, selectedOption, selectedThickness, inputValues]);
+    }, [dropdownValue, selectedOption, selectedThickness, inputValues, radioOptionsImage]);
 
     return (
         <div className="container order-container">
-            <header className="order-header">
-                <div className="order-top">
-                    <button className="back-btn"><img src="/images/icons/back-btn.svg" alt=""/> Вернуться назад</button>
-                    <h1>Труба в ППУ изоляции</h1>
-                </div>
-
-                <div className="order-bottom">
-                    <img
-                        src={selectedOption === "image1" ? "/images/pages/OrderPage/first.png" : "/images/pages/OrderPage/second.png"}
-                        alt="Selected Option"
-                        className="selected-image"
-                    />
-                    <InputDefault label="Уже в заказе"/>
-                </div>
-            </header>
+            <OrderHeader selectedOption={selectedOption}/>
             <VariantBlock title="Оболочка" disabled={false}>
                 <div className="radio-group">
                     {radioOptionsImage.map((option) => (
@@ -129,7 +117,7 @@ export const NewOrderPage = () => {
                     options={["10", "20", "30", "40", "50", "60","10", "20", "30", "40", "50", "60"]}
                     value={selectedThickness}
                     onChange={(value) => setSelectedThickness(value)}
-
+                    title="Толщина стенки"
                 />
             </VariantBlock>
             <VariantBlock title="Погонный метр по заказу" disabled={!stepCompleted.inputGroup}>

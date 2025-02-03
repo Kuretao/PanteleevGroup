@@ -54,7 +54,7 @@ const HistoryItems = [
     },
 ]
 
-export const History = ({setIsModalOpen}) => {
+export const History = () => {
     return(
         <section className="container history">
             {HistoryItems.map((item) => (
@@ -67,14 +67,17 @@ export const History = ({setIsModalOpen}) => {
 
                         <NavLink to="/Table"><ButtonDefault propsClass={"edit"} buttonDefaultText={"Редактировать"}/></NavLink>
                     </div>
-
                     <div className="history__rightside">
-                        <div className="history__rightside-top">
-                            <h2>Контактное лицо</h2>
-                            <h2>{item.contactName} {item.contactNumber}</h2>
+                        <div className="history__note">
+                            <h1>Заметки</h1>
+                            <h2>1231231</h2>
                         </div>
-                        <div className="history__rightside-bottom">
+                        <div className="history__rightside-left">
+                            <h2>Контактное лицо</h2>
                             <h2>Юр. лицо</h2>
+                        </div>
+                        <div className="history__rightside-right">
+                            <h2>{item.contactName} {item.contactNumber}</h2>
                             <h2>{item.contactCompany}</h2>
                         </div>
                     </div>

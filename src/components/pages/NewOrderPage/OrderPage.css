@@ -172,3 +172,16 @@
     width: max-content;
     padding: 12px 24px;
 }
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.setting-rotate:hover {
+    animation: rotate 2s linear infinite;
+}

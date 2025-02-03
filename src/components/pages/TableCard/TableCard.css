@@ -153,3 +153,9 @@
 .table-header > img{
     width: 160px;
 }
+
+.invoice-table td img{cursor: pointer}
+
+.invoice-table td img:hover {
+    filter: invert(20%) sepia(100%) saturate(5000%) hue-rotate(-10deg);
+}

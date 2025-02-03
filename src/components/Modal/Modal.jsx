@@ -1,6 +1,5 @@
 import "./Modal.css"
-import {ButtonDefault, ButtonWhite} from "../ui/button/Button";
-import {useState} from "react";
+import {ButtonDefault} from "../ui/button/Button";
 import {InputDefault} from "../ui/input/Input";
 
 const ModalInfo = [
@@ -20,7 +19,7 @@ export const Modal = ({setIsModalOpen}) =>{
                         <h1>Заказ создан</h1>
                         <img className="close" src="/images/icons/close.svg" alt="" onClick={() => setIsModalOpen(false)}/>
                 </div>
-                <span className="info">тут какие-то заметки или информация</span>
+                <InputDefault placeholder={"тут какие-то заметки или информация"}/>
                 <div className="modal-body">
                     {ModalInfo.map((item) => (
                         <div className="modal-item">
@@ -51,10 +50,7 @@ export const Modal = ({setIsModalOpen}) =>{
 
 export const PostModal = ({setIsEmailModalOpen}) =>
 {
-
-    const [email, setEmail] = useState("");
     const handleSend = () => {
-        console.log("Отправлено на email:", email);
         setIsEmailModalOpen(false);
     };
     return(

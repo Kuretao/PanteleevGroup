@@ -1,9 +1,11 @@
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 export const TableHeader = () => {
+    const navigate = useNavigate();
     return(
         <header className="table-header">
-            <button className="back-btn"><img src="/images/icons/back-btn.svg" alt=""/> Назад</button>
+            <button className="back-btn" onClick={() => navigate(-1)}><img src="/images/icons/back-btn.svg" alt=""/> Назад</button>
             <img src="/images/image/logo-big.png" alt=""/>
             <div className="alert">Внимание! Счет действителен до 07.10.2024.
                 Оплата данного счета означает согласие с условиями поставки товара.
