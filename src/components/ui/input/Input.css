@@ -98,7 +98,14 @@
     height: 20px;
 }
 
+.labels{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 17px;
+}
 
+.labels label{flex: 1}
 
 .inputs{
     display: flex;

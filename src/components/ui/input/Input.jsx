@@ -139,6 +139,30 @@ export const InputData = ({label, placeholder,  type = "text"}) => {
     )
 }
 
+export const TwoInputGroup = ({ label, labelSecond, placeholders, onChange, disabled }) => {
+    return (
+        <div className={`input-group ${disabled ? "disabled" : ""}`}>
+            <div className="labels">
+                {label && <label className="input-label">{label}</label>}
+                {labelSecond && <label className="input-label">{labelSecond}</label>}
+            </div>
+            <div className="inputs">
+                {placeholders.map((placeholder, index) => (
+                    <input
+                        key={index}
+                        type="text"
+                        className="input-field input__data"
+                        placeholder={placeholder}
+                        onChange={(e) => onChange(index, e.target.value)}
+                        disabled={disabled}
+                    />
+                ))}
+            </div>
+        </div>
+    );
+};
+
+
 export const InputGroup = ({ label, placeholders, onChange, disabled }) => {
     return (
         <div className={`input-group ${disabled ? "disabled" : ""}`}>

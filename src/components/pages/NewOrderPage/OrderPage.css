@@ -173,6 +173,11 @@
     padding: 12px 24px;
 }
 
+.order-container .input-container.input__data-container{
+    text-align: left;
+    align-items: start;
+}
+
 @keyframes rotate {
     from {
         transform: rotate(0deg);
