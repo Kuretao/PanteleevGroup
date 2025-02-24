@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./OrderPage.css";
-import {InputData, InputDefault, InputGroup, TwoInputGroup} from "../../ui/input/Input";
+import {InputData,  InputGroup, TwoInputGroup, TwoInputGroupAndDropdown} from "../../ui/input/Input";
 import {Dropdown} from "../../ui/dropdown/Dropdown";
 import {ThicknessTable} from "../../ui/ThicknessTable/ThicknessTable";
 import {ButtonDefault} from "../../ui/button/Button";
@@ -27,9 +27,111 @@ export const NewOrderPage = () => {
         { value: "polyethylene", label: "ПЭ (полиэтилен)", checked: false },
         { value: "oc", label: "ОЦ (оцинковка)", checked: false },
     ]);
-    const [selectedThickness, setSelectedThickness] = useState(null);
     const [inputValues, setInputValues] = useState(["", "", ""]);
     const [dropdownValue, setDropdownValue] = useState(null);
+
+    const [selectedGost, setSelectedGost] = useState(null);
+    const [availableDiameters, setAvailableDiameters] = useState([]);
+    const [selectedDiameter, setSelectedDiameter] = useState(null);
+    const [availableThickness, setAvailableThickness] = useState([]);
+    const [selectedThickness, setSelectedThickness] = useState(null);
+    const [pipeMass, setPipeMass] = useState(0);
+    const [quantity, setQuantity] = useState("");
+    const [totalWeight, setTotalWeight] = useState("");
+    const [availableShellDiameters, setAvailableShellDiameters] = useState([]);
+    const [selectedShellDiameter, setSelectedShellDiameter] = useState(null);
+    const [shellWeight, setShellWeight] = useState(0);
+    const [shellWeightPPU, setShellWeightPPU] = useState(0);
+
+    useEffect(() => {
+        if (selectedGost === "10704/10705" || selectedGost === "8732") {
+            setAvailableDiameters(["38", "42"]);
+        } else if (selectedGost === "3262") {
+            setAvailableDiameters(["15", "20"]);
+        } else {
+            setAvailableDiameters([]);
+        }
+        setSelectedDiameter(null);
+        setSelectedThickness(null);
+        setPipeMass(0);
+        setTotalWeight("");
+    }, [selectedGost]);
+
+    useEffect(() => {
+        if (selectedDiameter === "38") {
+            setAvailableThickness(["1.2", "1.4"]);
+        } else if (selectedDiameter === "42") {
+            setAvailableThickness(["1.5", "1.6"]);
+        } else if (selectedDiameter === "15" || selectedDiameter === "20") {
+            setAvailableThickness(["2.5", "2.8"]);
+        } else {
+            setAvailableThickness([]);
+        }
+        setSelectedThickness(null);
+        setPipeMass(0);
+        setTotalWeight("");
+    }, [selectedDiameter]);
+
+    useEffect(() => {
+        const massTable = {
+            "32-1.0": 0.77,
+            "38-1.2": 1.09,
+            "15-2.5": 1.16,
+        };
+
+        const key = `${selectedDiameter}-${selectedThickness}`;
+        setPipeMass(massTable[key] || 0);
+    }, [selectedDiameter, selectedThickness]);
+
+    useEffect(() => {
+        if (selectedDiameter === "32" && selectedThickness === "1.0") {
+            setAvailableShellDiameters(["110", "125"]);
+        } else if (selectedDiameter === "38" && selectedThickness === "1.2") {
+            setAvailableShellDiameters(["110", "125"]);
+        } else {
+            setAvailableShellDiameters([]);
+        }
+        setSelectedShellDiameter(null);
+        setShellWeight(0);
+    }, [selectedDiameter, selectedThickness]);
+
+    useEffect(() => {
+        if (availableShellDiameters.length > 0) {
+            setSelectedShellDiameter(availableShellDiameters[0]);
+        }
+    }, [availableShellDiameters]);
+
+
+    useEffect(() => {
+        const shellMassTable = {
+            "110-32-1.0": 0.538,
+            "125-32-1.0": 0.722,
+            "110-38-1.2": 0.82,
+            "125-38-1.2": 1.01,
+        };
+
+        const key = `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`;
+        setShellWeight(shellMassTable[key] || 0);
+        console.log("availableShellDiameters", availableShellDiameters);
+        console.log("selectedShellDiameter", selectedShellDiameter);
+        console.log("shellWeight", shellWeight);
+    }, [selectedShellDiameter, selectedDiameter, selectedThickness, availableShellDiameters, selectedShellDiameter, shellWeight]);
+
+    useEffect(() => {
+        console.log("selectedShellDiameter:", selectedShellDiameter);
+        console.log("Lookup key:", `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`);
+
+        const shellMassTablePPU = {
+            "110-32-1.0": 0.538,
+            "125-32-1.0": 0.722,
+            "110-38-1.2": 0.515,
+            "125-38-1.2": 0.699,
+        };
+
+        const key = `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`;
+        setShellWeightPPU(shellMassTablePPU[key] || 0);
+    }, [selectedShellDiameter, selectedDiameter, selectedThickness]);
+
     const handleRadioChangeImage = (value) => {
         setRadioOptionsImage((prev) =>
             prev.map((option) => ({ ...option, checked: option.value === value }))
@@ -37,11 +139,11 @@ export const NewOrderPage = () => {
         setSelectedOption(value === "polyethylene" ? "image1" : "image2");
     };
     const handleInputChange = (index, value) => {
-        setInputValues((prev) => {
-            const updated = [...prev];
-            updated[index] = value;
-            return updated;
-        });
+        if (index === 0) {
+            setQuantity(value);
+            const weight = parseFloat(value) * pipeMass;
+            setTotalWeight(weight ? weight.toFixed(2) : "");
+        }
     };
     const [stepCompleted, setStepCompleted] = useState({
         dropdown: false,
@@ -52,21 +154,21 @@ export const NewOrderPage = () => {
     useEffect(() => {
         setStepCompleted({
             CheckBoxGroup: radioOptionsImage.some(option => option.checked),
-            dropdown: dropdownValue !== null && dropdownValue !== "param1",
-            thickness: dropdownValue !== null && dropdownValue !== "param1" &&  selectedThickness !== null,
+            dropdown: selectedGost !== null,
+            thickness: selectedGost !== null && selectedDiameter !== null && selectedThickness !== null,
             inputGroup:
-                dropdownValue !== null &&
-                dropdownValue !== "param1" &&
+                selectedGost !== null &&
+                selectedDiameter !== null &&
                 selectedThickness !== null &&
                 radioOptionsImage.some(option => option.checked) &&
                 selectedOption !== null,
         });
-    }, [dropdownValue, selectedOption, selectedThickness, inputValues, radioOptionsImage]);
+    }, [selectedGost, selectedDiameter, selectedThickness, selectedOption, inputValues, radioOptionsImage]);
 
     return (
         <div className="container order-container">
-            <OrderHeader selectedOption={selectedOption}/>
-            <VariantBlock title="Оболочка" disabled={false}>
+            <OrderHeader selectedOption={selectedOption} inputValue={`Труба ст.эсв ${"(ГОСТ " + selectedGost + ' ' + dropdownValue + ")" }`}/>
+            <VariantBlock title="Оболочка" >
                 <div className="radio-group">
                     {radioOptionsImage.map((option) => (
                         <label key={option.value}>
@@ -83,79 +185,90 @@ export const NewOrderPage = () => {
                     ))}
                 </div>
             </VariantBlock>
-            <VariantBlock title={"Стальная труба"} disabled={false}>
-                <InputDefault label={"Цена за 1 тонну в рублях"} placeholder={"Введите цену"}/>
+            <VariantBlock title={"Стальная труба"} >
+                <InputData label={"Цена за 1 тонну в рублях"} placeholder={"Введите цену"}/>
             </VariantBlock>
-            <VariantBlock title="ГОСТ стальной трубы" disabled={!stepCompleted.CheckBoxGroup}>
+            <VariantBlock title="ГОСТ стальной трубы" >
                 <Dropdown
+                    zIndex="100"
                     label="ГОСТ"
                     options={[
-                        { value: "param1", label: "10704/10705", classname: "sphere blue" },
-                        { value: "param2", label: "8732", classname: "sphere gray" },
-                        { value: "param3", label: "3262", classname: "sphere green" },
+                        { value: "10704/10705", label: "10704/10705", classname: "sphere blue" },
+                        { value: "8732", label: "8732", classname: "sphere gray" },
+                        { value: "3262", label: "3262", classname: "sphere green" },
+                    ]}
+                    value={selectedGost}
+                    onChange={setSelectedGost}
+                />
+            </VariantBlock>
+            <VariantBlock title="Марка стали" >
+                <Dropdown
+                    zIndex="10"
+                    label="Марка стали"
+                    options={[
+                        { value: "Ст2", label: "Ст2", classname: "sphere blue" },
+                        { value: "Ст3", label: "Ст3", classname: "sphere gray" },
+                        { value: "Ст20", label: "Ст20", classname: "sphere green" },
+                        { value: "Ст09Г2С", label: "Ст09Г2С", classname: "sphere pink" },
+                        { value: "Ст17Г1С", label: "Ст17Г1С", classname: "sphere purple" },
+                        { value: "12х19н10т", label: "12х19н10т", classname: "sphere purple" },
                     ]}
                     value={dropdownValue}
                     onChange={setDropdownValue}
                 />
             </VariantBlock>
-            <VariantBlock title="Марка стали" disabled={!stepCompleted.CheckBoxGroup}>
-                <Dropdown
-                    label="ГОСТ"
-                    options={[
-                        { value: "param1", label: "Ст2", classname: "sphere blue" },
-                        { value: "param2", label: "Ст3", classname: "sphere gray" },
-                        { value: "param3", label: "Ст20", classname: "sphere green" },
-                        { value: "Ст09Г2С", label: "Параметр 4", classname: "sphere pink" },
-                        { value: "param5", label: "Ст17Г1С", classname: "sphere purple" },
-                        { value: "param6", label: "12х19н10т", classname: "sphere purple" },
-                    ]}
-                    value={dropdownValue}
-                    onChange={setDropdownValue}
-                />
-            </VariantBlock>
-            <VariantBlock title="Диаметр трубы D" disabled={!stepCompleted.dropdown}>
+            <VariantBlock title="Диаметр трубы D" >
                 <ThicknessTable
-                    options={["32", "38", "45", "40", "50", "60","10", "20", "30", "40", "50", "60"]}
-                    value={selectedThickness}
-                    onChange={(value) => setSelectedThickness(value)}
+                    options={availableDiameters}
+                    value={selectedDiameter}
+                    onChange={setSelectedDiameter}
                     title="Диаметр трубы D"
                 />
             </VariantBlock>
-            <VariantBlock title="Толщина стенки S" disabled={!stepCompleted.dropdown}>
+            <VariantBlock title="Толщина стенки S" >
                 <ThicknessTable
-                    options={["10", "20", "30", "40", "50", "60","10", "20", "30", "40", "50", "60"]}
+                    options={availableThickness}
                     value={selectedThickness}
-                    onChange={(value) => setSelectedThickness(value)}
+                    onChange={setSelectedThickness}
                     title="Толщина стенки S"
                 />
             </VariantBlock>
-            <VariantBlock title="Погонный метр по заказу" disabled={!stepCompleted.inputGroup}>
+            <VariantBlock title="Погонный метр по заказу" >
                 <InputGroup
-                    label="Сколько нужно метров"
-                    placeholders={["Введите количество", "Масса", "Максимально весь заказ"]}
+                    label={["Сколько нужно метров", "Масса 1 шт", "Cправочно весь заказ"]}
+                    values={[quantity, pipeMass.toString(), totalWeight]}
                     onChange={handleInputChange}
                 />
             </VariantBlock>
-            <VariantBlock title={"Оболочка"} disabled={!stepCompleted.inputGroup}>
+            <VariantBlock title={"Оболочка"} >
                 <InputData label={"Цена за 1 кг в рублях"} placeholder={"Введите цену"}/>
             </VariantBlock>
-            <VariantBlock title="Диаметр оболочки D" disabled={!stepCompleted.inputGroup}>
-                <TwoInputGroup
-                    label="диаметр оболочки"
-                    labelSecond="вес справочно"
+            <VariantBlock title="Диаметр оболочки D">
+                <TwoInputGroupAndDropdown
+                    label={["диаметр ст. трубы",  "Диаметр оболочки", "Вес справочно"]}
                     placeholders={["#", "#"]}
-                    onChange={handleInputChange}
+                    onChange={() => {}}
+                    disabled={availableShellDiameters.length === 0}
+                    dropdownOptions={availableShellDiameters}
+                    dropdownValue={selectedShellDiameter}
+                    onDropdownChange={setSelectedShellDiameter}
+                    inputValue={shellWeight.toString()}
+                    availableShellDiameters={availableShellDiameters}
+                    selectedShellDiameter={selectedShellDiameter}
+                    setSelectedShellDiameter={setSelectedShellDiameter}
+                    selectedDiameter={selectedDiameter}
                 />
             </VariantBlock>
-            <VariantBlock title={"Длина оболочки"} disabled={!stepCompleted.inputGroup}>
-                <InputData label={"Цена за 1кг в рублях"} placeholder={"#"}/>
+            <VariantBlock title={"Длина оболочки"} >
+                <InputData label={"длина оболочки"} value={"11.7m"} placeholder={"#"}/>
             </VariantBlock>
-            <VariantBlock title="Вес справочно ППУ" disabled={!stepCompleted.inputGroup}>
+            <VariantBlock title="Вес справочно ППУ" >
                 <TwoInputGroup
-                    label="вес справочно"
-                    labelSecond="Цена за 1кг в рублях"
-                    placeholders={["#", "#"]}
+                    additionalClass="max-content"
+                    label={["Цена за 1кг в рублях", "вес справочно"]}
+                    placeholders={["Сделаем на бэке","#", ]}
                     onChange={handleInputChange}
+                    valueShellWeightPPU={["", shellWeightPPU]}
                 />
             </VariantBlock>
 

@@ -1,7 +1,8 @@
-import React, {useState} from "react";
+import React, { useState} from "react";
 import "./Input.css";
+import {Dropdown} from "../dropdown/Dropdown";
 
-export const InputDefault = ({ label, placeholder, type = "text", value, onChange }) => {
+export const InputDefault = ({ label, placeholder, type = "text" }) => {
     return(
         <div className="input-container">
             {label && <label className="input-label">{label}</label>}
@@ -16,35 +17,36 @@ export const InputDefault = ({ label, placeholder, type = "text", value, onChang
     )
 }
 
-export const InputOnHide = ({ label, placeholder, type = "text", value, onChange }) => {
-    const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    return(
-        <div className="input-container">
-            {label && <label className="input-label">{label}</label>}
-            <div className="input-field">
-                <input
-                    type={showPassword ? "text" : "password"}
-                    id="password"
-                    placeholder="Введите пароль"
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                    type="button"
-                    className="show-password-btn"
-                    onClick={() => setShowPassword(!showPassword)}>
-                    {showPassword ? (
-                        <img src="./media/img/log/EyeSlash.svg" alt="alt"/>
-                    ) : (
-                        <img src="./media/img/log/hide.svg" alt="alt"/>
-                    )}
-                </button>
-            </div>
-        </div>
-    )
-}
+//
+// export const InputOnHide = ({ label, placeholder, type = "text", value, onChange }) => {
+//     const [password, setPassword] = useState("");
+//     const [showPassword, setShowPassword] = useState(false);
+//     return(
+//         <div className="input-container">
+//             {label && <label className="input-label">{label}</label>}
+//             <div className="input-field">
+//                 <input
+//                     type={showPassword ? "text" : "password"}
+//                     id="password"
+//                     placeholder="Введите пароль"
+//                     required
+//                     value={password}
+//                     onChange={(e) => setPassword(e.target.value)}
+//                 />
+//                 <button
+//                     type="button"
+//                     className="show-password-btn"
+//                     onClick={() => setShowPassword(!showPassword)}>
+//                     {showPassword ? (
+//                         <img src="./media/img/log/EyeSlash.svg" alt="alt"/>
+//                     ) : (
+//                         <img src="./media/img/log/hide.svg" alt="alt"/>
+//                     )}
+//                 </button>
+//             </div>
+//         </div>
+//     )
+// }
 
 export const InputOnPassword = ({ label, labelRep }) => {
     const [password, setPassword] = useState("");
@@ -108,7 +110,7 @@ export const InputOnPassword = ({ label, labelRep }) => {
     );
 };
 
-export const SearchInput = ({ placeholder, value, onChange, onSearch }) => {
+export const SearchInput = ({ placeholder,   onSearch }) => {
     return (
         <div className="search-input-container">
             <input
@@ -124,7 +126,7 @@ export const SearchInput = ({ placeholder, value, onChange, onSearch }) => {
     );
 };
 
-export const InputData = ({label, placeholder,  type = "text"}) => {
+export const InputData = ({label, placeholder,  type = "text",value}) => {
     return(
         <div className="input-container input__data-container">
             {label && <label className="input-label">{label}</label>}
@@ -132,20 +134,69 @@ export const InputData = ({label, placeholder,  type = "text"}) => {
                 className="input-field input__data"
                 type={type}
                 placeholder={placeholder}
-                //value={value}
+                value={value}
                 //onChange={onChange}
             />
         </div>
     )
 }
 
-export const TwoInputGroup = ({ label, labelSecond, placeholders, onChange, disabled }) => {
+export const TwoInputGroupAndDropdown = ({
+                                             label, placeholders, disabled, inputValue, availableShellDiameters, selectedShellDiameter, setSelectedShellDiameter, selectedDiameter
+                                         }) => {
+    const formattedOptions = availableShellDiameters.map(diameter => ({
+        value: diameter,
+        label: diameter
+    }));
+
+
     return (
         <div className={`input-group ${disabled ? "disabled" : ""}`}>
-            <div className="labels">
-                {label && <label className="input-label">{label}</label>}
-                {labelSecond && <label className="input-label">{labelSecond}</label>}
+            {label &&
+                <div className={`labels`}>
+                    {label.map((label) => (
+                        <label className="input-label">{label}</label>
+                    ))}
+                </div>
+            }
+            <div className="inputs">
+                <input
+                    type="text"
+                    className="input-field input__data"
+                    placeholder={placeholders[0]}
+                    value={selectedDiameter}
+
+                    disabled={disabled}
+                />
+
+                <Dropdown
+                    label="Диаметр оболочки"
+                    options={formattedOptions} value={selectedShellDiameter} onChange={setSelectedShellDiameter}
+                />
+
+                <input
+                    type="text"
+                    className="input-field input__data"
+                    placeholder={placeholders[1]}
+                    value={inputValue}
+
+                    disabled={disabled}
+                />
             </div>
+        </div>
+    );
+};
+
+export const TwoInputGroup = ({ label, placeholders, onChange, disabled,valueShellWeightPPU, additionalClass }) => {
+    return (
+        <div className={`input-group ${disabled ? "disabled" : ""} ${additionalClass}`}>
+            {label &&
+                <div className={`labels ${additionalClass}`}>
+                    {label.map((label) => (
+                        <label className="input-label">{label}</label>
+                    ))}
+                </div>
+            }
             <div className="inputs">
                 {placeholders.map((placeholder, index) => (
                     <input
@@ -154,6 +205,7 @@ export const TwoInputGroup = ({ label, labelSecond, placeholders, onChange, disa
                         className="input-field input__data"
                         placeholder={placeholder}
                         onChange={(e) => onChange(index, e.target.value)}
+                        value={valueShellWeightPPU[index]}
                         disabled={disabled}
                     />
                 ))}
@@ -163,17 +215,24 @@ export const TwoInputGroup = ({ label, labelSecond, placeholders, onChange, disa
 };
 
 
-export const InputGroup = ({ label, placeholders, onChange, disabled }) => {
+export const InputGroup = ({ label, values, onChange, disabled }) => {
     return (
         <div className={`input-group ${disabled ? "disabled" : ""}`}>
-            {label && <label className="input-label">{label}</label>}
+            {label &&
+                <div className={`labels `}>
+                    {label.map((label) => (
+                        <label className="input-label">{label}</label>
+                    ))}
+                </div>
+            }
             <div className="inputs">
-                {placeholders.map((placeholder, index) => (
+                {values.map((value, index) => (
                     <input
                         key={index}
                         type="text"
                         className="input-field input__data"
-                        placeholder={placeholder}
+                        placeholder={"#"}
+                        value={value}
                         onChange={(e) => onChange(index, e.target.value)}
                         disabled={disabled}
                     />
