@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./Dropdown.css";
 
-export const Dropdown = ({ label, options, value, onChange, disabled }) => {
+export const Dropdown = ({ label, options, value, onChange, disabled,zIndex }) => {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     useEffect(() => {
@@ -16,14 +16,24 @@ export const Dropdown = ({ label, options, value, onChange, disabled }) => {
         };
     }, []);
 
+    // if (!options || options.length === 0) {
+    //     return <div className="dropdown-group">Нет доступных опций</div>;
+    // }
+    console.log("Dropdown value:", value);
+    console.log("Dropdown options:", options);
+
+
     return (
-        <div className="dropdown-group">
+        <div className="dropdown-group" style={{zIndex: zIndex, position:"relative"}}>
             <div className={`custom-dropdown ${disabled ? "disabled" : ""}`}>
                 <button
                     className="dropdown-button"
                     disabled={disabled}
                 >
-                    {value ? options.find((opt) => opt.value === value).label : label} <img onClick={() => !disabled && setIsDropdownOpen(!isDropdownOpen)} src="/images/icons/arrow-right.svg" alt=""/>
+                    {value && options.find((opt) => opt.value === value)
+                        ? options.find((opt) => opt.value === value).label
+                        : label}
+                    <img onClick={() => !disabled && setIsDropdownOpen(!isDropdownOpen)} src="/images/icons/arrow-right.svg" alt=""/>
                 </button>
                 {isDropdownOpen && (
                     <ul className="dropdown-options">

@@ -18,6 +18,7 @@ export const ThicknessTable = ({ options, value, onChange, disabled, title }) =>
 
     return (
         <div className={`thickness-table-container ${disabled ? "disabled" : ""}`}>
+            {title && <label className="input-label">{title}</label>}
             <button
                 className="dropdown-button table-dropdown-btn"
                 onClick={() => !disabled && setIsTableOpen(!isTableOpen)}

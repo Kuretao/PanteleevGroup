@@ -88,3 +88,18 @@
 .sphere.purple{
     background-color: #9757D7;
 }
+
+.order-container .inputs .dropdown-button{
+    min-width: 100%;
+    width: max-content;
+    gap: 16px;
+}
+
+.order-container .inputs .dropdown-options{
+    width: 100%;
+}
+
+.order-container .inputs .dropdown-button img{
+    width: 20px;
+    height: 20px;
+}

@@ -4,10 +4,15 @@
 
 .thickness-table-container{
     position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: max-content;
 }
 
 .thickness-table{
     position: absolute;
+    top:100%;
     margin-top: 8px;
     z-index: 1;
     background-color: #FCFCFD;

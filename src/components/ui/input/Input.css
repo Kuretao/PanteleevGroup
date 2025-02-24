@@ -105,7 +105,18 @@
     gap: 17px;
 }
 
+.max-content{
+    width: max-content;
+    min-width: 350px;
+    white-space: nowrap;
+}
+
 .labels label{flex: 1}
+
+.order-container .inputs > *{
+    flex: 0.33;
+}
+
 
 .inputs{
     display: flex;

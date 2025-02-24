@@ -1,8 +1,8 @@
-import {InputDefault} from "../input/Input";
+import {InputData, InputDefault} from "../input/Input";
 import {useNavigate} from "react-router-dom";
 
 
-export const OrderHeader = ({selectedOption}) =>{
+export const OrderHeader = ({selectedOption, inputValue}) =>{
     const navigate = useNavigate();
     return(
         <header className="order-header">
@@ -17,7 +17,7 @@ export const OrderHeader = ({selectedOption}) =>{
                     alt="Selected Option"
                     className="selected-image"
                 />
-                <InputDefault label="Уже в заказе"/>
+                <InputData label="Уже в заказе" value={inputValue}/>
             </div>
         </header>
     )

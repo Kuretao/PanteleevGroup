@@ -178,6 +178,12 @@
     align-items: start;
 }
 
+.order-container .input-group label, .order-container .input-label{
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
 @keyframes rotate {
     from {
         transform: rotate(0deg);
