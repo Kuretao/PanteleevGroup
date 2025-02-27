@@ -12,12 +12,19 @@ collection = db['orders_test']
 def save_ttn():
     if request.method == 'POST':
         data = request.get_json()
+        user_id = request.headers.get('X-User-ID')
+
+        if not user_id:
+            return jsonify({'error': 'User ID is required'}), 400
+
+        data['ownerId'] = user_id
 
         try:
             result = collection.insert_one(data)
             return jsonify({
-                'message': 'ok',
-                '_id': str(result.inserted_id)
+                'message': 'Заказ создан',
+                '_id': str(result.inserted_id),
+                'ownerId': user_id
             }), 201
         except Exception as e:
             return jsonify({'error': str(e)}), 500

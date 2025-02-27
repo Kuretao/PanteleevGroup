@@ -29,7 +29,7 @@ def register():
         'lastName': last_name,
         'username': username,
         'password': hashed_password,
-        'my_orders': ''
+        'orders': []
     }
 
     try:

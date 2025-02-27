@@ -1,5 +1,4 @@
 {
-  "_id": "object_id",
   "bankDetails": {
     "bik": "044525411",
     "accountNumber": "30101810145250000411",
