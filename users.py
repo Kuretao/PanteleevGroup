@@ -28,7 +28,8 @@ def register():
         'firstName': first_name,
         'lastName': last_name,
         'username': username,
-        'password': hashed_password
+        'password': hashed_password,
+        'my_orders': ''
     }
 
     try:
