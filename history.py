@@ -1,30 +1,30 @@
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
+from motor.motor_asyncio import AsyncIOMotorClient
+from bson.objectid import ObjectId
 from bson.errors import InvalidId
-from flask import Flask, jsonify
-from pymongo import MongoClient
-# from bson.objectid import ObjectId
 
-app = Flask(__name__)
+app = FastAPI()
 
-mongo_client = MongoClient('mongodb://localhost:27017')
-db = mongo_client['Pipes']
-collection = db['orders_test']
+client = AsyncIOMotorClient('mongodb://localhost:27017')
+db = client.Pipes
+collection = db.orders_test
 
+class Order(BaseModel):
+    _id: str
+    ownerId: str
 
-@app.route('/orders/<user_id>', methods=['GET'])
-def get_user_orders(user_id):
-    from bson.objectid import ObjectId
+@app.get('/orders/{user_id}')
+async def get_user_orders(user_id: str):
     try:
-        user_id = ObjectId(user_id)
+        object_id = ObjectId(user_id)
     except InvalidId:
-        return jsonify({'error': 'Invalid User ID'}), 400
+        raise HTTPException(status_code=400, detail="invalid id")
 
-    orders = list(collection.find({'ownerId': user_id}))
+    cursor = collection.find({'ownerId': object_id})
+    orders = []
+    async for doc in cursor:
+        order = Order(_id=str(doc['_id']), ownerId=str(doc['ownerId']))
+        orders.append(order.dict())
 
-    for order in orders:
-        order['_id'] = str(order['_id'])
-
-    return jsonify({'orders': orders}), 200
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return {'orders': orders}
