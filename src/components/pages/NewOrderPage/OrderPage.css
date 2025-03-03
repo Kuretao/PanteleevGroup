@@ -41,7 +41,7 @@
 }
 
 .order-bottom > *{
-    flex: 1;
+    height: 200px;
     object-fit: scale-down;
 }
 

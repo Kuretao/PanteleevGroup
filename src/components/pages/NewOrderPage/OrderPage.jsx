@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./OrderPage.css";
-import {InputData,  InputGroup, TwoInputGroup, TwoInputGroupAndDropdown} from "../../ui/input/Input";
+import {InputData,  InputGroup,  TwoInputGroupAndDropdown} from "../../ui/input/Input";
 import {Dropdown} from "../../ui/dropdown/Dropdown";
 import {ThicknessTable} from "../../ui/ThicknessTable/ThicknessTable";
 import {ButtonDefault} from "../../ui/button/Button";
@@ -14,7 +14,7 @@ const VariantBlock = ({ title, children , disabled}) => {
             <div><div className="left-panel">
                 <i></i>
                 <span>{title}</span>
-                <img className="back-button" src="/images/icons/arrow-right.svg" alt=""/>
+
             </div></div>
             <div className="right-panel">{children}</div>
         </div>
@@ -45,7 +45,7 @@ export const NewOrderPage = () => {
 
     useEffect(() => {
         if (selectedGost === "10704/10705" || selectedGost === "8732") {
-            setAvailableDiameters(["38", "42"]);
+            setAvailableDiameters(["38", "45"]);
         } else if (selectedGost === "3262") {
             setAvailableDiameters(["15", "20"]);
         } else {
@@ -60,8 +60,8 @@ export const NewOrderPage = () => {
     useEffect(() => {
         if (selectedDiameter === "38") {
             setAvailableThickness(["1.2", "1.4"]);
-        } else if (selectedDiameter === "42") {
-            setAvailableThickness(["1.5", "1.6"]);
+        } else if (selectedDiameter === "45") {
+            setAvailableThickness(["1.2", "1.4"]);
         } else if (selectedDiameter === "15" || selectedDiameter === "20") {
             setAvailableThickness(["2.5", "2.8"]);
         } else {
@@ -74,9 +74,12 @@ export const NewOrderPage = () => {
 
     useEffect(() => {
         const massTable = {
-            "32-1.0": 0.77,
             "38-1.2": 1.09,
+            "38-1.4": 1.26,
+            "45-1.2": 1.30,
+            "45-1.4": 1.51,
             "15-2.5": 1.16,
+            "15-2.8": 1.28,
         };
 
         const key = `${selectedDiameter}-${selectedThickness}`;
@@ -84,10 +87,14 @@ export const NewOrderPage = () => {
     }, [selectedDiameter, selectedThickness]);
 
     useEffect(() => {
-        if (selectedDiameter === "32" && selectedThickness === "1.0") {
+        if (selectedDiameter === "38" && selectedThickness === "1.2") {
             setAvailableShellDiameters(["110", "125"]);
-        } else if (selectedDiameter === "38" && selectedThickness === "1.2") {
+        }else if(selectedDiameter === "38" && selectedThickness === "1.4") {
             setAvailableShellDiameters(["110", "125"]);
+        } else if (selectedDiameter === "45" && selectedThickness === "1.2") {
+            setAvailableShellDiameters(["125"]);
+        }else if (selectedDiameter === "45" && selectedThickness === "1.4") {
+            setAvailableShellDiameters(["125"]);
         } else {
             setAvailableShellDiameters([]);
         }
@@ -104,10 +111,11 @@ export const NewOrderPage = () => {
 
     useEffect(() => {
         const shellMassTable = {
-            "110-32-1.0": 0.538,
-            "125-32-1.0": 0.722,
-            "110-38-1.2": 0.82,
-            "125-38-1.2": 1.01,
+            "110-38-1.2": 0.515,
+            "125-38-1.2": 0.515,
+            "125-38-1.4": 0.699,
+            "125-45-1.2": 0.667,
+            "125-45-1.4": 0.667,
         };
 
         const key = `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`;
@@ -115,17 +123,17 @@ export const NewOrderPage = () => {
         console.log("availableShellDiameters", availableShellDiameters);
         console.log("selectedShellDiameter", selectedShellDiameter);
         console.log("shellWeight", shellWeight);
-    }, [selectedShellDiameter, selectedDiameter, selectedThickness, availableShellDiameters, selectedShellDiameter, shellWeight]);
+    }, [selectedShellDiameter, selectedDiameter, selectedThickness, availableShellDiameters,  shellWeight]);
 
     useEffect(() => {
         console.log("selectedShellDiameter:", selectedShellDiameter);
         console.log("Lookup key:", `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`);
 
         const shellMassTablePPU = {
-            "110-32-1.0": 0.538,
-            "125-32-1.0": 0.722,
             "110-38-1.2": 0.515,
-            "125-38-1.2": 0.699,
+            "125-38-1.4": 0.699,
+            "125-45-1.2": 0.667,
+            "125-45-1.4": 0.667,
         };
 
         const key = `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`;
@@ -260,15 +268,34 @@ export const NewOrderPage = () => {
                 />
             </VariantBlock>
             <VariantBlock title={"Длина оболочки"} >
-                <InputData label={"длина оболочки"} value={"11.7m"} placeholder={"#"}/>
+                <InputData label={"длина оболочки"} value={"Сколько метров столько и будет"} placeholder={"#"}/>
             </VariantBlock>
+            {/*<VariantBlock title="Вес справочно ППУ" >*/}
+            {/*    <TwoInputGroup*/}
+            {/*        additionalClass="max-content"*/}
+            {/*        label={["Цена за 1кг в рублях", "вес справочно"]}*/}
+            {/*        placeholders={["Сделаем на бэке","#", ]}*/}
+            {/*        onChange={handleInputChange}*/}
+            {/*        valueShellWeightPPU={["", shellWeightPPU]}*/}
+            {/*    />*/}
+            {/*</VariantBlock>*/}
             <VariantBlock title="Вес справочно ППУ" >
-                <TwoInputGroup
-                    additionalClass="max-content"
-                    label={["Цена за 1кг в рублях", "вес справочно"]}
-                    placeholders={["Сделаем на бэке","#", ]}
+                <InputGroup
+                    label={["Цена за 1кг в рублях", "Вес справочно 1 п.м", "Масса Cправочно весь заказ"]}
+                    values={[quantity, shellWeightPPU, totalWeight]}
                     onChange={handleInputChange}
-                    valueShellWeightPPU={["", shellWeightPPU]}
+                />
+            </VariantBlock>
+
+            <VariantBlock title={"Работа"} >
+                <InputData label={"Оплата работы сотрудников"} placeholder={"#"}/>
+            </VariantBlock>
+
+            <VariantBlock title="Компоненты" >
+                <InputGroup
+                    label={["ПРОВОЛОКА", "деталь 2", "деталь 3", "деталь 4", "деталь 5", "общая цена"]}
+                    values={[quantity, quantity, quantity,quantity,quantity,quantity,]}
+                    onChange={handleInputChange}
                 />
             </VariantBlock>
 
