@@ -165,3 +165,14 @@
     flex-wrap: wrap;
     width: 100%;
 }
+
+
+@media screen and (max-width: 1500px) {
+    .container.history{
+        padding: 0 72px;
+    }
+
+    .history__rightside{
+        gap: 36px;
+    }
+}

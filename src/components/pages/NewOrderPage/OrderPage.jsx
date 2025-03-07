@@ -14,7 +14,6 @@ const VariantBlock = ({ title, children , disabled}) => {
             <div><div className="left-panel">
                 <i></i>
                 <span>{title}</span>
-
             </div></div>
             <div className="right-panel">{children}</div>
         </div>
