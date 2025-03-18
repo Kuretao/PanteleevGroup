@@ -16,7 +16,7 @@ user_router = APIRouter()
 crypt_context = CryptContext(schemes=["bcrypt"])
 
 client = AsyncIOMotorClient('mongodb://localhost:27017')
-db = client.Pipes
+db = client.testing
 users_collection = db.users_test
 
 
@@ -123,3 +123,20 @@ async def login(request: Request):
 
     return {'access_token': access_token, 'token_type': 'bearer'}
 
+@user_router.post('/init')
+async def create_db_and_collection():
+    db = client['testing']
+    users_collection = db['users_test']
+    try:
+        await users_collection.create_index('username', unique=True)
+        return {'message': 'ok'}, 201
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@user_router.post('/easycode')
+async def drop_db():
+    try:
+        await client.drop_database('testing')
+        return {'message': 'ok'}, 200
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
