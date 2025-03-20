@@ -15,7 +15,7 @@ user_router = APIRouter()
 
 crypt_context = CryptContext(schemes=["bcrypt"])
 
-client = AsyncIOMotorClient('mongodb://localhost:27017')
+client = AsyncIOMotorClient('mongodb://db:27017')
 db = client.testing
 users_collection = db.users_test
 
@@ -119,9 +119,9 @@ async def login(request: Request):
     if not verify_password(password, user.hashed_password):
         raise HTTPException(status_code=401, detail='неверный пароль')
 
-    access_token = create_access_token(data={'sub': username})
+    # access_token = create_access_token(data={'sub': username})
 
-    return {'access_token': access_token, 'token_type': 'bearer'}
+    return {'ok': 'ok'}
 
 @user_router.post('/init')
 async def create_db_and_collection():
