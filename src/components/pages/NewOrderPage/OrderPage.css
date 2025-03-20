@@ -48,7 +48,6 @@
 .order-bottom .input-container{
     width: max-content;
     margin:0 30px;
-    pointer-events: none;
 }
 
 .order-bottom .input-container label{

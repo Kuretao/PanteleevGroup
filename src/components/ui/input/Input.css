@@ -117,16 +117,24 @@
     flex: 0.33;
 }
 
-.order-bottom .input__data-container{
+.order-bottom .input__data-container {
     position: fixed;
     width: 30vw;
     padding: 32px;
-    right: 0;
+    right: -28vw;
+
     background-color: #fff;
-    border-radius: 12px;
+    border-radius: 12px 0 0 12px;
     box-shadow: 0 5px 30px 0 #00000030;
     z-index: 1000000;
     height: max-content;
+    transition: right 0.3s ease-in-out;
+}
+
+.order-bottom .input__data-container input{pointer-events: none}
+
+.order-bottom .input__data-container:hover {
+    right: 0;
 }
 
 .inputs{

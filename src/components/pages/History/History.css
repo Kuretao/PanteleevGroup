@@ -175,4 +175,10 @@
     .history__rightside{
         gap: 36px;
     }
+
+
+    .history__note{
+        width: 250px;
+    }
+
 }

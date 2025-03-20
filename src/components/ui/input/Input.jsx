@@ -2,7 +2,7 @@ import React, { useState} from "react";
 import "./Input.css";
 import {Dropdown} from "../dropdown/Dropdown";
 
-export const InputDefault = ({ label, placeholder, type = "text" }) => {
+export const InputDefault = ({ label, placeholder, type, onChange }) => {
     return(
         <div className="input-container">
             {label && <label className="input-label">{label}</label>}
@@ -11,7 +11,7 @@ export const InputDefault = ({ label, placeholder, type = "text" }) => {
                 type={type}
                 placeholder={placeholder}
                 //value={value}
-                //onChange={onChange}
+                onChange={onChange}
             />
         </div>
     )
@@ -48,8 +48,7 @@ export const InputDefault = ({ label, placeholder, type = "text" }) => {
 //     )
 // }
 
-export const InputOnPassword = ({ label, labelRep }) => {
-    const [password, setPassword] = useState("");
+export const InputOnPassword = ({ label, labelRep, onChange,password, setPassword }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
@@ -65,7 +64,7 @@ export const InputOnPassword = ({ label, labelRep }) => {
                         placeholder="Введите пароль"
                         required
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        onChange={onChange}
                     />
                     <button
                         type="button"

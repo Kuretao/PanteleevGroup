@@ -266,8 +266,8 @@ export const NewOrderPage = () => {
                     selectedDiameter={selectedDiameter}
                 />
             </VariantBlock>
-            <VariantBlock title={"Длина оболочки"} >
-                <InputData label={"длина оболочки"} value={"Сколько метров столько и будет"} placeholder={"#"}/>
+            <VariantBlock title={"Длина оболочки "} >
+                <InputData label={"длина оболочки весь заказ"} value={"Сколько метров столько и будет"} placeholder={"#"}/>
             </VariantBlock>
             {/*<VariantBlock title="Вес справочно ППУ" >*/}
             {/*    <TwoInputGroup*/}
