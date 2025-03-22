@@ -1,12 +1,7 @@
 import React from "react";
 
-export const InvoiceTable = () => {
-    const data = [
-        { name: "Труба ОЦ сталь ГОСТ 10704 ТПТ ППУ", quantity: 78, weight: "пог. м", volume: "", price: 3830.0, vatRate: 20, vatAmount: 49790.0, total: 298740.0 },
-        { name: "Труба ОЦ сталь ГОСТ 10704 ТПТ ППУ", quantity: 78, weight: "пог. м", volume: "", price: 1880.0, vatRate: 20, vatAmount: 24440.0, total: 146640.0 },
-        { name: "Отвод ОЦ 90° ТСГ ППУ", quantity: 11, weight: "шт", volume: "", price: 9570.0, vatRate: 20, vatAmount: 17545.0, total: 105270.0 },
-        { name: "Укор", quantity: 10, weight: "шт", volume: "", price: 4700.0, vatRate: 20, vatAmount: 7833.33, total: 47000.0 }
-    ];
+export const InvoiceTable = ({data}) => {
+
     const result = data.reduce((acc, item) => {
         acc.totalQuantity += item.quantity;
         acc.totalSum += item.total;

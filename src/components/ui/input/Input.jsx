@@ -1,6 +1,7 @@
-import React, { useState} from "react";
+import React, {useEffect, useState} from "react";
 import "./Input.css";
 import {Dropdown} from "../dropdown/Dropdown";
+import Cookies from "js-cookie";
 
 export const InputDefault = ({ label, placeholder, type, onChange }) => {
     return(
@@ -135,6 +136,28 @@ export const InputData = ({label, placeholder,  type = "text",value}) => {
                 placeholder={placeholder}
                 value={value}
                 //onChange={onChange}
+            />
+        </div>
+    )
+}
+
+
+export const InputDataCookie = ({label, placeholder}) => {
+    const cookieName = label.replace(/\s+/g, "_").toLowerCase();
+    const [value, setValue] = useState(Cookies.get(cookieName) || "");
+
+    useEffect(() => {
+        Cookies.set(cookieName, value, { expires: 7 });
+    }, [value]);
+    return(
+        <div className="input-container input__data-container">
+            {label && <label className="input-label">{label}</label>}
+            <input
+                className="input-field input__data"
+                type="text"
+                value={value}
+                placeholder={placeholder}
+                onChange={(e) => setValue(e.target.value)}
             />
         </div>
     )

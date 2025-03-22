@@ -172,6 +172,63 @@ export const NewOrderPage = () => {
         });
     }, [selectedGost, selectedDiameter, selectedThickness, selectedOption, inputValues, radioOptionsImage]);
 
+    const setCookie = (name, value, days = 365) => {
+        const expires = new Date();
+        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+        document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/`;
+    };
+
+
+    const getCookie = (name) => {
+        const cookies = document.cookie.split("; ");
+        const cookie = cookies.find(row => row.startsWith(`${name}=`));
+        return cookie ? decodeURIComponent(cookie.split("=")[1]) : null;
+    };
+
+    useEffect(() => {
+        const savedGost = getCookie("selectedGost");
+        if (savedGost) setSelectedGost(savedGost);
+
+        const savedDropdownValue = getCookie("dropdownValue");
+        if (savedDropdownValue) setDropdownValue(savedDropdownValue);
+
+        const savedDiameter = getCookie("selectedDiameter");
+        if (savedDiameter) setSelectedDiameter(savedDiameter);
+
+        const savedThickness = getCookie("selectedThickness");
+        if (savedThickness) setSelectedThickness(savedThickness);
+
+        const savedShellDiameter = getCookie("selectedShellDiameter");
+        if (savedShellDiameter) setSelectedShellDiameter(savedShellDiameter);
+    }, []);
+
+    const handleGostChange = (value) => {
+        setSelectedGost(value);
+        setCookie("selectedGost", value);
+    };
+
+    const handleDropdownChange = (value) => {
+        setDropdownValue(value);
+        setCookie("dropdownValue", value);
+    };
+
+    const handleDiameterChange = (value) => {
+        setSelectedDiameter(value);
+        setCookie("selectedDiameter", value);
+    };
+
+    const handleThicknessChange = (value) => {
+        setSelectedThickness(value);
+        setCookie("selectedThickness", value);
+    };
+
+    const handleShellDiameterChange = (value) => {
+        setSelectedShellDiameter(value);
+        setCookie("selectedShellDiameter", value);
+    };
+
+
+
     return (
         <div className="container order-container">
             <OrderHeader selectedOption={selectedOption} inputValue={`Труба ст.эсв ${"(ГОСТ " + selectedGost + ' ' + dropdownValue + ")" }`}/>
@@ -205,7 +262,7 @@ export const NewOrderPage = () => {
                         { value: "3262", label: "3262", classname: "sphere green" },
                     ]}
                     value={selectedGost}
-                    onChange={setSelectedGost}
+                    onChange={handleGostChange}
                 />
             </VariantBlock>
             <VariantBlock title="Марка стали" >
@@ -221,14 +278,14 @@ export const NewOrderPage = () => {
                         { value: "12х19н10т", label: "12х19н10т", classname: "sphere purple" },
                     ]}
                     value={dropdownValue}
-                    onChange={setDropdownValue}
+                    onChange={handleDropdownChange}
                 />
             </VariantBlock>
             <VariantBlock title="Диаметр трубы D" >
                 <ThicknessTable
                     options={availableDiameters}
                     value={selectedDiameter}
-                    onChange={setSelectedDiameter}
+                    onChange={handleDiameterChange}
                     title="Диаметр трубы D"
                 />
             </VariantBlock>
@@ -236,7 +293,7 @@ export const NewOrderPage = () => {
                 <ThicknessTable
                     options={availableThickness}
                     value={selectedThickness}
-                    onChange={setSelectedThickness}
+                    onChange={handleThicknessChange}
                     title="Толщина стенки S"
                 />
             </VariantBlock>
@@ -258,7 +315,7 @@ export const NewOrderPage = () => {
                     disabled={availableShellDiameters.length === 0}
                     dropdownOptions={availableShellDiameters}
                     dropdownValue={selectedShellDiameter}
-                    onDropdownChange={setSelectedShellDiameter}
+                    onDropdownChange={handleShellDiameterChange}
                     inputValue={shellWeight.toString()}
                     availableShellDiameters={availableShellDiameters}
                     selectedShellDiameter={selectedShellDiameter}

@@ -1,4 +1,4 @@
-import {InputData} from "../../ui/input/Input";
+import {InputData, InputDataCookie} from "../../ui/input/Input";
 import "./MainPage.css";
 import {NavLink} from "react-router-dom";
 import {ButtonDefault} from "../../ui/button/Button";
@@ -6,10 +6,10 @@ import {ButtonDefault} from "../../ui/button/Button";
 const MainHead = () =>{
     return(
         <div className="Main__Head">
-            <InputData label="ИНН" placeholder="введите инн"/>
-            <InputData label="контактное лицо" placeholder="введите имя и фамилию"/>
-            <InputData label="Почта" placeholder="введите почту"/>
-            <InputData label="Телефон для связи" placeholder="введите телефон"/>
+            <InputDataCookie label="ИНН" placeholder="введите инн"/>
+            <InputDataCookie label="контактное лицо" placeholder="введите имя и фамилию"/>
+            <InputDataCookie label="Почта" placeholder="введите почту"/>
+            <InputDataCookie label="Телефон для связи" placeholder="введите телефон"/>
             <NavLink to="/Category" style={{height: 46}}><ButtonDefault propsClass="smallBtn hg" buttonDefaultText="Создать новый заказ"/></NavLink>
         </div>
     )
