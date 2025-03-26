@@ -49,7 +49,7 @@ export const InputDefault = ({ label, placeholder, type, onChange }) => {
 //     )
 // }
 
-export const InputOnPassword = ({ label, labelRep, onChange,password, setPassword }) => {
+export const InputOnPassword = ({ label, labelRep, onChange,password}) => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
 
@@ -126,7 +126,7 @@ export const SearchInput = ({ placeholder,   onSearch }) => {
     );
 };
 
-export const InputData = ({label, placeholder,  type = "text",value}) => {
+export const InputData = ({label, placeholder, onChange,  type = "text",value}) => {
     return(
         <div className="input-container input__data-container">
             {label && <label className="input-label">{label}</label>}
@@ -135,7 +135,7 @@ export const InputData = ({label, placeholder,  type = "text",value}) => {
                 type={type}
                 placeholder={placeholder}
                 value={value}
-                //onChange={onChange}
+                onChange={(e) => onChange?.(e.target.value)}
             />
         </div>
     )

@@ -8,6 +8,7 @@ import {NavLink} from "react-router-dom";
 import {OrderHeader} from "../../ui/OrderPage/OrderHeader";
 
 
+
 const VariantBlock = ({ title, children , disabled}) => {
     return (
         <div className={`variant-block ${disabled ? "disabled" : ""}`}>
@@ -20,6 +21,18 @@ const VariantBlock = ({ title, children , disabled}) => {
     );
 };
 
+export const setCookieObject = (name, obj, days = 365) => {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+    document.cookie = `${name}=${encodeURIComponent(JSON.stringify(obj))}; expires=${expires.toUTCString()}; path=/`;
+};
+
+export const getCookieObject = (name) => {
+    const cookies = document.cookie.split("; ");
+    const cookie = cookies.find(row => row.startsWith(`${name}=`));
+    return cookie ? JSON.parse(decodeURIComponent(cookie.split("=")[1])) : null;
+};
+
 export const NewOrderPage = () => {
     const [selectedOption, setSelectedOption] = useState("image1");
     const [radioOptionsImage, setRadioOptionsImage] = useState([
@@ -28,7 +41,6 @@ export const NewOrderPage = () => {
     ]);
     const [inputValues, setInputValues] = useState(["", "", ""]);
     const [dropdownValue, setDropdownValue] = useState(null);
-
     const [selectedGost, setSelectedGost] = useState(null);
     const [availableDiameters, setAvailableDiameters] = useState([]);
     const [selectedDiameter, setSelectedDiameter] = useState(null);
@@ -41,6 +53,9 @@ export const NewOrderPage = () => {
     const [selectedShellDiameter, setSelectedShellDiameter] = useState(null);
     const [shellWeight, setShellWeight] = useState(0);
     const [shellWeightPPU, setShellWeightPPU] = useState(0);
+    const [steelPipePrice, setSteelPipePrice] = useState("");
+    const [shellPrice, setShellPrice] = useState("");
+    const [workPayment, setWorkPayment] = useState("");
 
     useEffect(() => {
         if (selectedGost === "10704/10705" || selectedGost === "8732") {
@@ -100,14 +115,11 @@ export const NewOrderPage = () => {
         setSelectedShellDiameter(null);
         setShellWeight(0);
     }, [selectedDiameter, selectedThickness]);
-
     useEffect(() => {
         if (availableShellDiameters.length > 0) {
             setSelectedShellDiameter(availableShellDiameters[0]);
         }
     }, [availableShellDiameters]);
-
-
     useEffect(() => {
         const shellMassTable = {
             "110-38-1.2": 0.515,
@@ -123,7 +135,6 @@ export const NewOrderPage = () => {
         console.log("selectedShellDiameter", selectedShellDiameter);
         console.log("shellWeight", shellWeight);
     }, [selectedShellDiameter, selectedDiameter, selectedThickness, availableShellDiameters,  shellWeight]);
-
     useEffect(() => {
         console.log("selectedShellDiameter:", selectedShellDiameter);
         console.log("Lookup key:", `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`);
@@ -134,98 +145,137 @@ export const NewOrderPage = () => {
             "125-45-1.2": 0.667,
             "125-45-1.4": 0.667,
         };
-
         const key = `${selectedShellDiameter}-${selectedDiameter}-${selectedThickness}`;
         setShellWeightPPU(shellMassTablePPU[key] || 0);
     }, [selectedShellDiameter, selectedDiameter, selectedThickness]);
 
     const handleRadioChangeImage = (value) => {
-        setRadioOptionsImage((prev) =>
-            prev.map((option) => ({ ...option, checked: option.value === value }))
-        );
+        const updatedRadioOptions = radioOptionsImage.map((option) => ({
+            ...option,
+            checked: option.value === value,
+        }));
+        setRadioOptionsImage(updatedRadioOptions);
         setSelectedOption(value === "polyethylene" ? "image1" : "image2");
+        // updateCookieData("radioOptionsImage", updatedRadioOptions);
+        // updateCookieData("selectedOption", value === "polyethylene" ? "image1" : "image2");
     };
-    const handleInputChange = (index, value) => {
+
+    const handleInputChange = (index, newValue) => {
         if (index === 0) {
-            setQuantity(value);
-            const weight = parseFloat(value) * pipeMass;
-            setTotalWeight(weight ? weight.toFixed(2) : "");
+            setQuantity(newValue);
+            // updateCookieData("quantity", newValue);
+            const weight = parseFloat(newValue) * pipeMass;
+            const newTotalWeight = weight ? weight.toFixed(2) : "";
+            setTotalWeight(newTotalWeight);
+            // updateCookieData("totalWeight", newTotalWeight);
         }
     };
-    const [stepCompleted, setStepCompleted] = useState({
-        dropdown: false,
-        thickness: false,
-        inputGroup: false,
-        CheckBoxGroup: false,
-    });
-    useEffect(() => {
-        setStepCompleted({
-            CheckBoxGroup: radioOptionsImage.some(option => option.checked),
-            dropdown: selectedGost !== null,
-            thickness: selectedGost !== null && selectedDiameter !== null && selectedThickness !== null,
-            inputGroup:
-                selectedGost !== null &&
-                selectedDiameter !== null &&
-                selectedThickness !== null &&
-                radioOptionsImage.some(option => option.checked) &&
-                selectedOption !== null,
-        });
-    }, [selectedGost, selectedDiameter, selectedThickness, selectedOption, inputValues, radioOptionsImage]);
-
-    const setCookie = (name, value, days = 365) => {
-        const expires = new Date();
-        expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
-        document.cookie = `${name}=${encodeURIComponent(value)}; expires=${expires.toUTCString()}; path=/`;
-    };
-
-
-    const getCookie = (name) => {
-        const cookies = document.cookie.split("; ");
-        const cookie = cookies.find(row => row.startsWith(`${name}=`));
-        return cookie ? decodeURIComponent(cookie.split("=")[1]) : null;
-    };
 
     useEffect(() => {
-        const savedGost = getCookie("selectedGost");
-        if (savedGost) setSelectedGost(savedGost);
-
-        const savedDropdownValue = getCookie("dropdownValue");
-        if (savedDropdownValue) setDropdownValue(savedDropdownValue);
-
-        const savedDiameter = getCookie("selectedDiameter");
-        if (savedDiameter) setSelectedDiameter(savedDiameter);
-
-        const savedThickness = getCookie("selectedThickness");
-        if (savedThickness) setSelectedThickness(savedThickness);
-
-        const savedShellDiameter = getCookie("selectedShellDiameter");
-        if (savedShellDiameter) setSelectedShellDiameter(savedShellDiameter);
+        const savedData = getCookieObject("formData");
+        if (savedData) {
+            if (savedData.selectedOption !== undefined) setSelectedOption(savedData.selectedOption);
+            if (savedData.radioOptionsImage !== undefined) setRadioOptionsImage(savedData.radioOptionsImage);
+            if (savedData.inputValues !== undefined) setInputValues(savedData.inputValues);
+            if (savedData.dropdownValue !== undefined) setDropdownValue(savedData.dropdownValue);
+            if (savedData.selectedGost !== undefined) setSelectedGost(savedData.selectedGost);
+            if (savedData.availableDiameters !== undefined) setAvailableDiameters(savedData.availableDiameters);
+            if (savedData.selectedDiameter !== undefined) setSelectedDiameter(savedData.selectedDiameter);
+            if (savedData.availableThickness !== undefined) setAvailableThickness(savedData.availableThickness);
+            if (savedData.selectedThickness !== undefined) setSelectedThickness(savedData.selectedThickness);
+            if (savedData.pipeMass !== undefined) setPipeMass(savedData.pipeMass);
+            if (savedData.quantity !== undefined) setQuantity(savedData.quantity);
+            if (savedData.totalWeight !== undefined) setTotalWeight(savedData.totalWeight);
+            if (savedData.availableShellDiameters !== undefined) setAvailableShellDiameters(savedData.availableShellDiameters);
+            if (savedData.selectedShellDiameter !== undefined) setSelectedShellDiameter(savedData.selectedShellDiameter);
+            if (savedData.shellWeight !== undefined) setShellWeight(savedData.shellWeight);
+            if (savedData.shellWeightPPU !== undefined) setShellWeightPPU(savedData.shellWeightPPU);
+            if (savedData.steelPipePrice !== undefined) setSteelPipePrice(savedData.steelPipePrice);
+            if (savedData.shellPrice !== undefined) setShellPrice(savedData.shellPrice);
+            if (savedData.workPayment !== undefined) setWorkPayment(savedData.workPayment);
+        }
     }, []);
+
+    const updateCookieData = (key, value) => {
+        const savedData = getCookieObject("formData") || {};
+        savedData[key] = value;
+        setCookieObject("formData", savedData);
+    };
+
+
 
     const handleGostChange = (value) => {
         setSelectedGost(value);
-        setCookie("selectedGost", value);
+        // updateCookieData("selectedGost", value);
     };
+
 
     const handleDropdownChange = (value) => {
         setDropdownValue(value);
-        setCookie("dropdownValue", value);
+        // updateCookieData("dropdownValue", value);
     };
+
 
     const handleDiameterChange = (value) => {
         setSelectedDiameter(value);
-        setCookie("selectedDiameter", value);
+        // updateCookieData("selectedDiameter", value);
     };
+
 
     const handleThicknessChange = (value) => {
         setSelectedThickness(value);
-        setCookie("selectedThickness", value);
+        // updateCookieData("selectedThickness", value);
     };
+
 
     const handleShellDiameterChange = (value) => {
         setSelectedShellDiameter(value);
-        setCookie("selectedShellDiameter", value);
+        // updateCookieData("selectedShellDiameter", value);
     };
+
+
+    const handleAddNewPosition = () => {
+        let savedData = getCookieObject("formData");
+        if (!savedData || !Array.isArray(savedData.data)) {
+            savedData = { data: [] };
+        }
+        const newPosition = {
+            selectedGost,
+            dropdownValue,
+            selectedDiameter,
+            selectedThickness,
+            quantity,
+            totalWeight,
+            selectedShellDiameter,
+            shellWeight,
+            shellWeightPPU,
+            steelPipePrice,
+            shellPrice,
+            workPayment
+        };
+        savedData.data.push(newPosition);
+        setCookieObject("formData", savedData);
+        setSelectedGost(null);
+        setDropdownValue(null);
+        setSelectedDiameter(null);
+        setSelectedThickness(null);
+        setQuantity("");
+        setTotalWeight("");
+        setSelectedShellDiameter(null);
+        setShellWeight(0);
+        setShellWeightPPU(0);
+        setSteelPipePrice("");
+        setShellPrice("");
+        setWorkPayment("");
+
+        console.log("Добавлена новая позиция:", newPosition);
+    };
+
+
+    const col = () =>{
+        console.log(getCookieObject("formData"))
+    }
+
 
 
 
@@ -246,11 +296,11 @@ export const NewOrderPage = () => {
                             />
                             {option.label}
                         </label>
-                    ))}
+                     ))}
                 </div>
             </VariantBlock>
             <VariantBlock title={"Стальная труба"} >
-                <InputData label={"Цена за 1 тонну в рублях"} placeholder={"Введите цену"}/>
+                <InputData label={"Цена за 1 тонну в рублях"} placeholder={"Введите цену"}    onChange={(val) => {setSteelPipePrice(val);  updateCookieData("steelPipePrice", val); }}/>{/* выбор сохраняем в куки*/}
             </VariantBlock>
             <VariantBlock title="ГОСТ стальной трубы" >
                 <Dropdown
@@ -305,7 +355,11 @@ export const NewOrderPage = () => {
                 />
             </VariantBlock>
             <VariantBlock title={"Оболочка"} >
-                <InputData label={"Цена за 1 кг в рублях"} placeholder={"Введите цену"}/>
+                <InputData label={"Цена за 1 кг в рублях"} placeholder={"Введите цену"}    value={shellPrice}
+                           onChange={(val) => {
+                               setShellPrice(val);
+                               updateCookieData("shellPrice", val);
+                           }}/>
             </VariantBlock>
             <VariantBlock title="Диаметр оболочки D">
                 <TwoInputGroupAndDropdown
@@ -326,15 +380,7 @@ export const NewOrderPage = () => {
             <VariantBlock title={"Длина оболочки "} >
                 <InputData label={"длина оболочки весь заказ"} value={"Сколько метров столько и будет"} placeholder={"#"}/>
             </VariantBlock>
-            {/*<VariantBlock title="Вес справочно ППУ" >*/}
-            {/*    <TwoInputGroup*/}
-            {/*        additionalClass="max-content"*/}
-            {/*        label={["Цена за 1кг в рублях", "вес справочно"]}*/}
-            {/*        placeholders={["Сделаем на бэке","#", ]}*/}
-            {/*        onChange={handleInputChange}*/}
-            {/*        valueShellWeightPPU={["", shellWeightPPU]}*/}
-            {/*    />*/}
-            {/*</VariantBlock>*/}
+
             <VariantBlock title="Вес справочно ППУ" >
                 <InputGroup
                     label={["Цена за 1кг в рублях", "Вес справочно 1 п.м", "Масса Cправочно весь заказ"]}
@@ -344,10 +390,13 @@ export const NewOrderPage = () => {
             </VariantBlock>
 
             <VariantBlock title={"Работа"} >
-                <InputData label={"Оплата работы сотрудников"} placeholder={"#"}/>
+                <InputData label={"Оплата работы сотрудников"} placeholder={"#"}    onChange={(val) => {
+                    setWorkPayment(val);
+                    updateCookieData("workPayment", val);
+                }}/>
             </VariantBlock>
 
-            <VariantBlock title="Компоненты" >
+            <VariantBlock title="Компоненты">
                 <InputGroup
                     label={["ПРОВОЛОКА", "деталь 2", "деталь 3", "деталь 4", "деталь 5", "общая цена"]}
                     values={[quantity, quantity, quantity,quantity,quantity,quantity,]}
@@ -355,9 +404,10 @@ export const NewOrderPage = () => {
                 />
             </VariantBlock>
 
-            <div className="order-btns">
-                <NavLink to={"/Category"}><ButtonDefault buttonDefaultText={"Добавить еще позицию"}/></NavLink>
-                <NavLink to={"/Table"}><ButtonDefault buttonDefaultText={"Посмотреть накладную"}/></NavLink>
+            <div className="order-btns" onClick={col}>
+                {/*<NavLink to={"/Category"}></NavLink>*/}
+                <ButtonDefault onClick={handleAddNewPosition} buttonDefaultText={"Добавить еще позицию"}/>
+                <NavLink to={"/Table"} ><ButtonDefault buttonDefaultText={"Посмотреть накладную"}/></NavLink>
             </div>
         </div>
     );

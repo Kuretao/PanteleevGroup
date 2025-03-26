@@ -1,10 +1,10 @@
 import "./Button.css";
 
 
-export  const ButtonDefault = ({buttonDefaultText, propsClass}) =>{
+export  const ButtonDefault = ({buttonDefaultText, propsClass, onClick}) =>{
     const additionalClass = `buttonDefault ${propsClass}`;
     return(
-        <button className={additionalClass}>{buttonDefaultText}</button>
+        <button className={additionalClass} onClick={onClick}>{buttonDefaultText}</button>
     )
 }
 

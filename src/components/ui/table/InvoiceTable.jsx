@@ -1,7 +1,29 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
+import {getCookieObject} from "../../pages/NewOrderPage/OrderPage";
+import Cookies from "js-cookie";
 
-export const InvoiceTable = ({data}) => {
+export const InvoiceTable = () => {
+    const [data, setData] = useState([]);
 
+
+    useEffect(() => {
+        const savedData = getCookieObject("formData");
+
+        if (savedData && Array.isArray(savedData.data)) {
+            setData(savedData.data);
+        }
+    }, []);
+
+    const handleDelete = (index) => {
+        const updatedData = data.filter((_, i) => i !== index);
+        setData(updatedData);
+        Cookies.set("formData", JSON.stringify({ data: updatedData }));
+    };
+
+    if (!Array.isArray(data)) {
+        console.error("InvoiceTable: data is not an array", data);
+        return <p>Ошибка загрузки данных</p>;
+    }
     const result = data.reduce((acc, item) => {
         acc.totalQuantity += item.quantity;
         acc.totalSum += item.total;
@@ -64,16 +86,18 @@ export const InvoiceTable = ({data}) => {
                 {data.map((item, index) => (
                     <tr key={index}>
                         <td>{index + 1}</td>
-                        <td>{item.name}</td>
-                        <td>{item.quantity}</td>
-                        <td>{item.weight}</td>
-                        <td></td>
-                        <td>{item.volume}</td>
-                        <td>{item.price.toLocaleString()} руб.</td>
-                        <td>{item.vatRate}%</td>
-                        <td>{item.vatAmount.toLocaleString()} руб.</td>
-                        <td>{item.total.toLocaleString()} руб.</td>
-                        <td width="50"><img src="/images/icons/delete.svg" alt="delete"/></td>
+                        <td>{item.selectedGost || "—"}</td>
+                        <td>{item.quantity ?? 0}</td>
+                        <td>{item.totalWeight ?? "—"}</td>
+                        <td>{item.shellWeight ?? "—"}</td>
+                        <td>{item.shellWeightPPU ?? "—"}</td>
+                        <td>{parseFloat(item.steelPipePrice || 0).toLocaleString()} руб.</td>
+                        <td>{item.selectedThickness || "—"}</td>
+                        <td>{parseFloat(item.shellPrice || 0).toLocaleString()} руб.</td>
+                        <td>{parseFloat(item.workPayment || 0).toLocaleString()} руб.</td>
+                        <td width="50">
+                            <img onClick={() => handleDelete(index)} src="/images/icons/delete.svg" alt="delete"/>
+                        </td>
                     </tr>
                 ))}
                 </tbody>
