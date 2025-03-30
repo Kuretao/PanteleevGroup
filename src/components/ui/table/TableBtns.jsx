@@ -1,11 +1,12 @@
 import { ButtonDefault, ButtonWhite } from "../button/Button";
 import React, { useState } from "react";
 
-export const TableBtns = ({ setIsModalOpen, handleSendEmailClick }) => {
+export const TableBtns = ({ setIsModalOpen, handleSendEmailClick,handleCreateOrder }) => {
     const [isSaved, setIsSaved] = useState(false);
     const handleSaveClick = () => {
         setIsSaved(true);
         setIsModalOpen(true);
+        handleCreateOrder();
     };
 
     return (

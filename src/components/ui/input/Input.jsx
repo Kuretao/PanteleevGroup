@@ -143,7 +143,13 @@ export const InputData = ({label, placeholder, onChange,  type = "text",value}) 
 
 
 export const InputDataCookie = ({label, placeholder}) => {
-    const cookieName = label.replace(/\s+/g, "_").toLowerCase();
+    const labelToCookieName = {
+        "ИНН": "inn",
+        "контактное лицо": "contact_person",
+        "Почта": "email",
+        "Телефон для связи": "phone"
+    };
+    const cookieName = labelToCookieName[label] || label.replace(/\s+/g, "_").toLowerCase();
     const [value, setValue] = useState(Cookies.get(cookieName) || "");
 
     useEffect(() => {
