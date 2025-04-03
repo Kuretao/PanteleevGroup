@@ -142,18 +142,27 @@ async def drop_db():
 
 
 async def backup_db():
+    databases = await client.list_database_names()
+    if 'logs' not in databases:
+        print("creating db 'logs'")
+        target_db = client['logs']
+    else:
+        target_db = client['logs']
+
     source_db = client["testing"]
-    target_db = client["logs"]
-
     collections = await source_db.list_collection_names()
-
-    now = datetime.now().strftime("%Y_%m_%d")
+    now = datetime.now().strftime("%d_%m_%Y")
 
     for collection_name in collections:
         print(f"processing collection: {collection_name}")
         source_collection = source_db[collection_name]
+        target_collections = await target_db.list_collection_names()
         target_collection_name = f"{collection_name}_{now}"
-        target_collection = target_db[target_collection_name]
+        if target_collection_name not in target_collections:
+            print(f"creating collection '{target_collection_name}' in 'logs' database")
+            target_collection = target_db[target_collection_name]
+        else:
+            target_collection = target_db[target_collection_name]
 
         count = 0
         async for document in source_collection.find({}):
