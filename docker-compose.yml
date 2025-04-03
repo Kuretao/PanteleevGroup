@@ -10,9 +10,22 @@ services:
       - MONGODB_URL=mongodb://db:27017
   db:
     image: mongo
-    ports:
-      - "27017:27017"
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
     volumes:
       - mongodb_data:/data/db
+  mongo-backup:
+    image: mongo
+    command: >
+      bash -c "
+        echo 'waiting for mongo to start';
+        while ! nc -z db 27017; do sleep 1; done;
+        mongodump --uri='mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@db:27017/?authSource=admin' --out='/backups'";
+    depends_on:
+      - db
+    volumes:
+      - ./backups:/backups
 volumes:
   mongodb_data:
+  backups:

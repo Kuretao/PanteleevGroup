@@ -1,4 +1,4 @@
-import uvicorn
+import asyncio
 from fastapi import APIRouter, Request, HTTPException
 from pydantic import BaseModel, Field
 from typing import Optional
@@ -9,13 +9,11 @@ from datetime import timedelta, datetime
 from uuid import uuid4
 
 
-
-
 user_router = APIRouter()
 
 crypt_context = CryptContext(schemes=["bcrypt"])
 
-client = AsyncIOMotorClient('mongodb://db:27017')
+client = AsyncIOMotorClient('mongodb://localhost:27017')
 db = client.testing
 users_collection = db.users_test
 
@@ -140,3 +138,38 @@ async def drop_db():
         return {'message': 'ok'}, 200
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+
+async def backup_db():
+    source_db = client["testing"]
+    target_db = client["logs"]
+
+    collections = await source_db.list_collection_names()
+
+    now = datetime.now().strftime("%Y_%m_%d")
+
+    for collection_name in collections:
+        print(f"processing collection: {collection_name}")
+        source_collection = source_db[collection_name]
+        target_collection_name = f"{collection_name}_{now}"
+        target_collection = target_db[target_collection_name]
+
+        count = 0
+        async for document in source_collection.find({}):
+            result = await target_collection.insert_one(document)
+            print(f"document inserted with _id: {result.inserted_id}")
+            count += 1
+
+        print(f"{count} documents copied from {collection_name} to {target_collection_name}")
+
+    client.close()
+
+    # await asyncio.sleep(60)
+
+@user_router.post('/ananas')
+async def create_backup(request: Request):
+    loop = asyncio.get_event_loop()
+    task = loop.create_task(backup_db())
+    await task
+    return {"message": "backup completed."}
