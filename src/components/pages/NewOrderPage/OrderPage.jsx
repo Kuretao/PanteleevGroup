@@ -4,7 +4,7 @@ import {InputData,  InputGroup,  TwoInputGroupAndDropdown} from "../../ui/input/
 import {Dropdown} from "../../ui/dropdown/Dropdown";
 import {ThicknessTable} from "../../ui/ThicknessTable/ThicknessTable";
 import {ButtonDefault} from "../../ui/button/Button";
-import {NavLink} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 import {OrderHeader} from "../../ui/OrderPage/OrderHeader";
 
 
@@ -56,7 +56,8 @@ export const NewOrderPage = () => {
     const [steelPipePrice, setSteelPipePrice] = useState("");
     const [shellPrice, setShellPrice] = useState("");
     const [workPayment, setWorkPayment] = useState("");
-
+    const location = useLocation();
+    const title = location.state?.title || "Ошибка";
     useEffect(() => {
         if (selectedGost === "10704/10705" || selectedGost === "8732") {
             setAvailableDiameters(["38", "45"]);
@@ -281,7 +282,7 @@ export const NewOrderPage = () => {
 
     return (
         <div className="container order-container">
-            <OrderHeader selectedOption={selectedOption} inputValue={`Труба ст.эсв ${"(ГОСТ " + selectedGost + ' ' + dropdownValue + ")" }`}/>
+            <OrderHeader selectedOption={selectedOption} title={title} inputValue={`Труба ст.эсв ${"(ГОСТ " + selectedGost + ' ' + dropdownValue + ")" }`}/>
             <VariantBlock title="Оболочка" >
                 <div className="radio-group">
                     {radioOptionsImage.map((option) => (

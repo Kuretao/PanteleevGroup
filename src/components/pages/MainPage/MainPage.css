@@ -12,6 +12,26 @@
     align-items: end;
 }
 
+.AdditionalInputs{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 20px;
+    margin-top: 24px;
+    align-items: end;
+    flex-wrap: wrap;
+}
+
+.AdditionalInputs > *{
+    max-width: 300px;
+}
+
+.AdditionalInputs > div:nth-child(6){
+    width:100%;
+    flex: 1;
+    max-width: 100%;
+}
+
 .MainPage__main{
     display: flex;
     flex-direction: column;

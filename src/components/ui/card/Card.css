@@ -21,6 +21,7 @@
     height: 160px;
     width: 160px;
     object-position: center;
+    object-fit: cover;
     background-color: #ECECEC;
 }
 
@@ -35,5 +36,5 @@
     width: 100%;
     border: none;
     background-color: var(--BorderGray);
-    height: 1px;
+    min-height: 1px;
 }

@@ -1,13 +1,19 @@
 import React from "react";
 import "./Card.css";
 import {ButtonDefault} from "../button/Button";
-import "./Card.css";
 import { useNavigate} from "react-router-dom";
 
 const Card = ({ image, title }) => {
     const navigate = useNavigate();
+    const handleClick = () => {
+        if (title === "Отвод в ППУ изоляции") {
+            navigate("/NewOrderOtvod", { state: { title } });
+        } else {
+            navigate("/NewOrder", { state: { title } });
+        }
+    };
     return (
-        <div className="card" onClick={() => navigate("/NewOrder")}>
+        <div className="card" onClick={handleClick}>
             <div className="card-image">
                 <img src={image} alt={title} />
             </div>

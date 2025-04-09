@@ -147,7 +147,12 @@ export const InputDataCookie = ({label, placeholder}) => {
         "ИНН": "inn",
         "контактное лицо": "contact_person",
         "Почта": "email",
-        "Телефон для связи": "phone"
+        "Телефон": "phone",
+        "Телефон для связи": "phone",
+        "Юридическое лицо": "legal_entity",
+        "КПП": "kpp",
+        "Индекс": "index",
+        "Полный адрес": "address"
     };
     const cookieName = labelToCookieName[label] || label.replace(/\s+/g, "_").toLowerCase();
     const [value, setValue] = useState(Cookies.get(cookieName) || "");
